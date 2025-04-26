@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pay PRATIK ENTERPRISES - UPI Payment</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+    h1 {
+      color: #0072ff;
+    }
+    p {
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: #0072ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #005bb5;
+    }
+    .hidden {
+      display: none;
+    }
+    #receipt {
+      margin-top: 20px;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #999;
+    }
+    .upi-logos {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .upi-logos img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Page 1: Amount Input -->
+<div id="page1" class="container">
+  <h1>PRATIK ENTERPRISES</h1>
+  <p>Enter amount to pay via UPI</p>
+
+  <input type="number" id="amount" placeholder="Enter Amount (₹)">
+  <button onclick="goToQRPage()">Proceed</button>
+
+  <div class="upi-logos">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/PhonePe_Logo.png" alt="PhonePe">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Google_Pay_Logo.svg" alt="Google Pay">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Paytm_logo.png" alt="Paytm">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/BHIM-UPI-logo.png" alt="BHIM UPI">
+  </div>
+
+  <footer>© 2025 PRATIK ENTERPRISES</footer>
+</div>
+
+<!-- Page 2: QR Code and Receipt -->
+<div id="page2" class="container hidden">
+  <h1>Payment QR</h1>
+  <div id="qrcode"></div>
+
+  <div id="receipt">
+    <p><strong>Merchant:</strong> PRATIK ENTERPRISES</p>
+    <p><strong>UPI ID:</strong> 9709321274@CNRB</p>
+    <p><strong>Amount:</strong> ₹<span id="showAmount"></span></p>
+  </div>
+
+  <button onclick="window.print()">Print Receipt</button>
+  <button style="background: #ff5252; margin-top:10px;" onclick="backToHome()">Back</button>
+
+  <div class="upi-logos">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/PhonePe_Logo.png" alt="PhonePe">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Google_Pay_Logo.svg" alt="Google Pay">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Paytm_logo.png" alt="Paytm">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/BHIM-UPI-logo.png" alt="BHIM UPI">
+  </div>
+
+  <footer>© 2025 PRATIK ENTERPRISES</footer>
+</div>
+
+<script>
+function goToQRPage() {
+  var amount = document.getElementById("amount").value.trim();
+  if (!amount || amount <= 0) {
+    alert("Please enter a valid amount.");
+    return;
+  }
+
+  var upiId = "9709321274@CNRB";
+  var name = "PRATIK ENTERPRISES";
+  var upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+
+  // Hide page 1 and show page 2
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.remove("hidden");
+
+  // Set amount in receipt
+  document.getElementById("showAmount").innerText = amount;
+
+  // Generate QR
+  document.getElementById("qrcode").innerHTML = "";
+  new QRCode(document.getElementById("qrcode"), {
+    text: upiUrl,
+    width: 200,
+    height: 200,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+  });
+}
+
+function backToHome() {
+  // Clear QR code
+  document.getElementById("qrcode").innerHTML = "";
+  document.getElementById("amount").value = "";
+
+  // Show page 1 and hide page 2
+  document.getElementById("page1").classList.remove("hidden");
+  document.getElementById("page2").classList.add("hidden");
+}
+</script>
+
+</body>
+</html>
